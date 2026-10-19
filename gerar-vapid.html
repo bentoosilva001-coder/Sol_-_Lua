@@ -1,0 +1,13 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gerar chaves VAPID</title>
+<style>body{font-family:system-ui;max-width:640px;margin:30px auto;padding:0 16px}code{display:block;word-break:break-all;background:#eee;padding:10px;border-radius:8px;margin:6px 0 16px}button{padding:12px 18px;font-size:16px}</style></head><body>
+<h1>Chaves para notificações push</h1>
+<p>Clique para gerar um par de chaves. Tudo acontece no seu navegador, nada é enviado para a internet. Guarde a chave privada: ela é segredo.</p>
+<button onclick="gen()">Gerar chaves</button>
+<h3>Chave pública (vai no config.js)</h3><code id="pub">—</code>
+<h3>Chave privada (vai só nos Secrets do Supabase)</h3><code id="prv">—</code>
+<script>
+const b64=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+async function gen(){const k=await crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},true,['sign']);
+ document.getElementById('pub').textContent=b64(new Uint8Array(await crypto.subtle.exportKey('raw',k.publicKey)));
+ document.getElementById('prv').textContent=(await crypto.subtle.exportKey('jwk',k.privateKey)).d}
+</script></body></html>
